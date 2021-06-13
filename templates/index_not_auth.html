@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Рецепты{% endblock %}
+{% block content %}
+    {% include 'includes/header_guest.html' with index=True %}
+    {% load static %}
+    {% csrf_token %}
+    {% load tag_filters %}
+    {% load user_filters %}
+    {% block static %}
+        <link rel="stylesheet" href={% static 'pages/index.css' %}>
+    {% endblock static %}
+    <!doctype html>
+    <body class="body">
+    <main class="main container">
+        <div class="main__header">
+            <h1 class="main__title">Рецепты</h1>
+            {% include 'includes/tags.html' %}
+        </div>
+        <div class="card-list">
+            {% for recipe in page %}
+                <p>{% include "includes/recipe_card.html" with recipe=recipe %}</p>
+            {% endfor %}
+        </div>
+        {% if page.paginator.count > 6 %}
+            {% include "includes/pagination.html" %}
+        {% endif %}
+    </main>
+    {% block scripts %}
+        <script src="{% static 'js/components/MainCards.js' %}"></script>
+
+        <script src="{% static 'js/components/Purchases.js' %}"></script>
+
+        <script src="{% static 'js/config/config.js' %}"></script>
+        <script src="{% static 'js/components/CardList.js' %}"></script>
+        <script src="{% static 'js/components/Header.js' %}"></script>
+
+        <script src="{% static 'js/api/Api.js' %}"></script>
+        <script src="{% static 'indexNotAuth.js' %}"></script>
+    {% endblock scripts %}
+{% endblock content %}
