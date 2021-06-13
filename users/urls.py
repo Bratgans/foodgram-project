@@ -1,12 +1,8 @@
-from django.conf.urls import url, include
-from rest_framework.routers import DefaultRouter
+from django.urls import path
 
-from .views import UserViewSet
-
-router = DefaultRouter()
-router.register(r'users', UserViewSet)
+from . import views
 
 urlpatterns = [
-    url(r'^', include(router.urls)),
-    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
+    path("signup/", views.SignUp.as_view(), name="signup")
 ]
+

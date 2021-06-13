@@ -1,5 +1,4 @@
 import os
-
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -17,6 +16,9 @@ ALLOWED_HOSTS = [
 ]
 
 INSTALLED_APPS = [
+    'users',
+    'django.contrib.sites',
+    'django.contrib.flatpages',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -24,8 +26,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'users',
-    'recipe',
+    'recipes.apps.RecipeAppConfig',
 ]
 
 MIDDLEWARE = [
@@ -40,11 +41,11 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'foodgram.urls'
 
-TEMPLATES_DIR = os.path.join(BASE_DIR, "templates")
+TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [TEMPLATES_DIR],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -59,16 +60,25 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'foodgram.wsgi.application'
 
+"""DB for Coding"""
 DATABASES = {
     'default': {
-        'ENGINE': os.environ.get('DB_ENGINE') or 'django.db.backends.postgresql',
-        'NAME': os.environ.get('DB_NAME') or 'postgres',
-        'USER': os.environ.get('POSTGRES_USER') or 'postgres',
-        'PASSWORD': os.environ.get('POSTGRES_PASSWORD') or 'postgres',
-        'HOST': os.environ.get('DB_HOST') or 'db',
-        'PORT': os.environ.get('DB_PORT') or '5432',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
+
+"""DB for Deploy"""
+# DATABASES = {
+#     'default': {
+#         'ENGINE': os.environ.get('DB_ENGINE') or 'django.db.backends.postgresql',
+#         'NAME': os.environ.get('DB_NAME') or 'postgres',
+#         'USER': os.environ.get('POSTGRES_USER') or 'postgres',
+#         'PASSWORD': os.environ.get('POSTGRES_PASSWORD') or 'postgres',
+#         'HOST': os.environ.get('DB_HOST') or 'db',
+#         'PORT': os.environ.get('DB_PORT') or '5432',
+#     }
+# }
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -95,9 +105,15 @@ USE_L10N = True
 
 USE_TZ = True
 
+SITE_ID = 1
+
 STATIC_URL = '/static/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+STATICFILES_DIRS = [
+    'static_files',
+]
 
 MEDIA_URL = '/media/'
 
@@ -113,3 +129,7 @@ REST_FRAMEWORK = {
         'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10,
 }
+
+LOGIN_URL = '/auth/login/'
+LOGIN_REDIRECT_URL = 'index'
+LOGOUT_REDIRECT_URL = 'index'

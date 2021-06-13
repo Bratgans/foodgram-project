@@ -1,10 +1,11 @@
-from django.contrib.auth.models import User
-from rest_framework import viewsets
+from django.views.generic import CreateView
 
-from .serializers import UserSerializer
+from django.urls import reverse_lazy
+
+from .forms import CreationForm
 
 
-class UserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
+class SignUp(CreateView):
+    form_class = CreationForm
+    success_url = reverse_lazy('login')
     template_name = 'reg.html'
