@@ -1,4 +1,4 @@
-from django.views.generic import CreateView
+from django.views.generic import CreateView, DetailView
 
 from django.urls import reverse_lazy
 
@@ -9,3 +9,8 @@ class SignUp(CreateView):
     form_class = CreationForm
     success_url = reverse_lazy('login')
     template_name = 'reg.html'
+
+
+class UserView(DetailView):
+    pass
+

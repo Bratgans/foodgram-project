@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.core.validators import MinValueValidator
 from django.db import models
+from sorl.thumbnail import ImageField
 
 User = get_user_model()
 
@@ -49,7 +50,7 @@ class Tag(models.Model):
         verbose_name_plural = 'Тэги'
 
     def __str__(self):
-        return self.title
+        return self.display_name
 
 
 class Recipe(models.Model):
@@ -79,7 +80,7 @@ class Recipe(models.Model):
         auto_now_add=True,
         db_index=True,
     )
-    image = models.ImageField(
+    image = ImageField(
         upload_to='static/images/',
         verbose_name='Изображение',
         help_text='Вставьте картинку',
@@ -87,7 +88,7 @@ class Recipe(models.Model):
     tag = models.ManyToManyField(
         Tag,
         related_name='recipes',
-        verbose_name='Тэг',
+        verbose_name='Тэги',
         help_text='Выберите тэги',
     )
     cook_time = models.PositiveIntegerField(
@@ -155,7 +156,7 @@ class UserRecipeRelation(models.Model):
     in_bookmarks = models.BooleanField(default=False)
 
     def __str__(self):
-        return f'{self.user.username}, {self.recipe.name}, {self.in_bookmarks}'
+        return f'{self.user.username}, {self.recipe.title}, {self.in_bookmarks}'
 
     class Meta:
         verbose_name = 'Избранное'

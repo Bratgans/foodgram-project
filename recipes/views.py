@@ -17,8 +17,30 @@ def index(request):
     page = paginator.get_page(page_number)
     context = {
         'page': page,
+        'is_paginated': True,
         'paginator': paginator,
         'all_tags': all_tags,
         'tags_list': tags_list
     }
     return render(request, 'index.html', context)
+
+
+@login_required()
+def create_recipe(request):
+    pass
+
+
+def favorites(request):
+    pass
+
+
+def shopping_list(request):
+    pass
+
+
+def subscriptions(request):
+    pass
+
+
+def recipe_view(request):
+    pass
