@@ -1,4 +1,4 @@
-https://github.com/Bratgans/foodgram-project/actions/workflows/yamdb_workflow.yml/badge.svg
+![FoodGram](https://github.com/Bratgans/foodgram-project/actions/workflows/yamdb_workflow.yml/badge.svg)
 # foodgram-project
 ###«Продуктовый помощник» (Дипломный Проект студента Яндекс.Практикум)
 

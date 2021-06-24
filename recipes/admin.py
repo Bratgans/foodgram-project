@@ -1,9 +1,7 @@
 from django.contrib import admin
 
-from .models import (
-    Favorite, Follow, Ingredient,
-    IngredientRecipe, Purchase, Recipe, Tag
-)
+from .models import (Favorite, Follow, Ingredient, IngredientRecipe, Purchase,
+                     Recipe, Tag)
 
 
 class IngredientRecipeInline(admin.TabularInline):
@@ -69,4 +67,3 @@ admin.site.register(Tag)
 admin.site.register(IngredientRecipe)
 
 admin.site.site_header = 'FoodGram Admin'
-

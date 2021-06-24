@@ -9,10 +9,8 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.views import View
 
 from .forms import RecipeForm
-from .models import (
-    Favorite, Follow, Ingredient, IngredientRecipe,
-    Purchase, Recipe, Tag, User
-)
+from .models import (Favorite, Follow, Ingredient, IngredientRecipe, Purchase,
+                     Recipe, Tag, User)
 
 
 def get_ingredients(request):
