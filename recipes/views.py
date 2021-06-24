@@ -34,8 +34,9 @@ def index(request):
     tags_list = request.GET.getlist('tags')
     if not tags_list:
         tags_list = ['breakfast', 'lunch', 'dinner']
-    recipe_list = Recipe.objects.filter(tags__title__in=tags_list). \
-        select_related('author').prefetch_related('tags').distinct()
+    recipe_list = Recipe.objects.filter(
+        tags__title__in=tags_list
+    ).select_related('author').prefetch_related('tags').distinct()
     paginator = Paginator(recipe_list, settings.RECIPE_PER_PAGE)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
