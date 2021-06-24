@@ -1,5 +1,4 @@
-
-FROM python:3.8.5
+FROM python:3.8.10-slim-buster
 
 WORKDIR /code
 COPY requirements.txt .

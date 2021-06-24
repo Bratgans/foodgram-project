@@ -13,6 +13,14 @@ from .models import (Favorite, Follow, Ingredient, IngredientRecipe, Purchase,
                      Recipe, Tag, User)
 
 
+def get_all_tags():
+    all_tags = Tag.objects.all()
+    tags_list = []
+    for tag in all_tags:
+        tags_list.append(tag.slug)
+    return tags_list
+
+
 def get_ingredients(request):
     """
         Получение ингредиентов
@@ -33,7 +41,7 @@ def index(request):
     """
     tags_list = request.GET.getlist('tags')
     if not tags_list:
-        tags_list = ['breakfast', 'lunch', 'dinner']
+        tags_list = get_all_tags()
     recipe_list = Recipe.objects.filter(
         tags__title__in=tags_list
     ).select_related('author').prefetch_related('tags').distinct()
