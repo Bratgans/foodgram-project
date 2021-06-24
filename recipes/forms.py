@@ -15,6 +15,6 @@ class RecipeForm(forms.ModelForm):
             'image'
         ]
         widgets = {
-                   'description': forms.Textarea(attrs={'rows': 8}),
-                   'tags': CheckboxSelectMultiple()
-                   }
+            'description': forms.Textarea(attrs={'rows': 8}),
+            'tags': CheckboxSelectMultiple()
+        }
