@@ -1,20 +1,12 @@
 import os
+from pathlib import Path
 
 from dotenv import load_dotenv
 
+
 load_dotenv()
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
-SECRET_KEY = os.environ.get('SECRET_KEY') or 'p&l%385148kslhtyn^##a1)ilz@4zqj=rq&agdol^##zgl9(vs'
-
-DEBUG = True
-
-ALLOWED_HOSTS = [
-    '127.0.0.1',
-    'localhost',
-    'web',
-]
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 INSTALLED_APPS = [
     'users',
@@ -27,7 +19,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'debug_toolbar',
     'sorl.thumbnail',
     'recipes.apps.RecipeAppConfig',
 ]
@@ -40,7 +31,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'foodgram.urls'
@@ -49,7 +39,7 @@ TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'DIRS': [TEMPLATES_DIR],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -64,26 +54,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'foodgram.wsgi.application'
-
-"""DB for Coding"""
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-}
-
-"""DB for Deploy"""
-# DATABASES = {
-#     'default': {
-#         'ENGINE': os.environ.get('DB_ENGINE') or 'django.db.backends.postgresql',
-#         'NAME': os.environ.get('DB_NAME') or 'postgres',
-#         'USER': os.environ.get('POSTGRES_USER') or 'postgres',
-#         'PASSWORD': os.environ.get('POSTGRES_PASSWORD') or 'postgres',
-#         'HOST': os.environ.get('DB_HOST') or 'db',
-#         'PORT': os.environ.get('DB_PORT') or '5432',
-#     }
-# }
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -148,12 +118,3 @@ RECIPE_PER_PAGE = 6
 LOGIN_URL = '/auth/login/'
 LOGIN_REDIRECT_URL = 'index'
 LOGOUT_REDIRECT_URL = 'index'
-
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_HOST_USER = os.getenv('GMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = os.getenv('GMAIL_HOST_PASSWORD')
-EMAIL_USE_TLS = True
-EMAIL_USE_SSL = False
-

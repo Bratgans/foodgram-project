@@ -104,7 +104,7 @@ class IngredientRecipe(models.Model):
     ingredient = models.ForeignKey(
         Ingredient,
         on_delete=models.CASCADE,
-        verbose_name='Ингредиент',
+        verbose_name='Ингредиент в рецепте',
     )
     recipe = models.ForeignKey(
         Recipe,
@@ -127,8 +127,8 @@ class IngredientRecipe(models.Model):
                 name='unique_recipe_ingredient'
             )
         ]
-        verbose_name = 'Ингредиент'
-        verbose_name_plural = 'Ингредиенты'
+        verbose_name = 'Ингредиент в рецептах'
+        verbose_name_plural = 'Ингредиенты в рецептах'
 
     def __str__(self):
         return f'{self.ingredient}, {self.value}'

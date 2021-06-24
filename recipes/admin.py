@@ -42,10 +42,28 @@ class IngredientAdmin(admin.ModelAdmin):
     list_filter = ("title",)
 
 
-admin.site.register(Purchase)
-admin.site.register(Follow)
-admin.site.register(Favorite)
-admin.site.register(Ingredient)
+class PurchaseAdmin(admin.ModelAdmin):
+    """
+        Настройка админки для покупок
+    """
+    list_display = ("user", "recipe")
+    search_fields = ("user",)
+    list_filter = ("user",)
+
+
+class FollowAdmin(admin.ModelAdmin):
+    """
+        Настройка админки для подписок
+    """
+    list_display = ("user", "author")
+    search_fields = ("user",)
+    list_filter = ("user",)
+
+
+admin.site.register(Purchase, PurchaseAdmin)
+admin.site.register(Follow, FollowAdmin)
+admin.site.register(Favorite, FavoriteAdmin)
+admin.site.register(Ingredient, IngredientAdmin)
 admin.site.register(Recipe, RecipeAdmin)
 admin.site.register(Tag)
 admin.site.register(IngredientRecipe)
