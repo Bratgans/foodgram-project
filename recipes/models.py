@@ -23,7 +23,6 @@ class Ingredient(models.Model):
         verbose_name = 'Ингредиент'
         verbose_name_plural = 'Ингредиенты'
         db_table = 'recipes_ingredients'
-        ordering = ('title',)
 
     def __str__(self):
         return f'{self.title}, {self.dimension}'
@@ -56,7 +55,7 @@ class Tag(models.Model):
 class Recipe(models.Model):
     title = models.CharField(
         max_length=200,
-        verbose_name='Название',
+        verbose_name='Название рецепта',
         help_text='Укажите название рецепта',
         unique=True,
     )
@@ -82,23 +81,14 @@ class Recipe(models.Model):
     )
     image = ImageField(
         upload_to='static/images/',
-        verbose_name='Изображение',
-        help_text='Вставьте картинку',
     )
-    tag = models.ManyToManyField(
+    tags = models.ManyToManyField(
         Tag,
-        related_name='recipes',
+        related_name='tags',
         verbose_name='Тэги',
-        help_text='Выберите тэги',
     )
     cook_time = models.PositiveIntegerField(
-        verbose_name='Время приготовления в минутах'
-    )
-    slug = models.SlugField(
-        verbose_name='Адрес рецепта',
-        max_length=50,
-        unique=True,
-        blank=True,
+        verbose_name='Время приготовления'
     )
 
     class Meta:
@@ -119,10 +109,10 @@ class IngredientRecipe(models.Model):
     recipe = models.ForeignKey(
         Recipe,
         on_delete=models.CASCADE,
-        related_name='ingredients_amount',
+        related_name='ingredients_recipe',
         verbose_name='Рецепт',
     )
-    quantity = models.DecimalField(
+    value = models.DecimalField(
         max_digits=6,
         decimal_places=1,
         validators=[MinValueValidator(1)],
@@ -141,23 +131,70 @@ class IngredientRecipe(models.Model):
         verbose_name_plural = 'Ингредиенты'
 
     def __str__(self):
-        return f'{self.ingredient}, {self.quantity}'
+        return f'{self.ingredient}, {self.value}'
 
 
-class UserRecipeRelation(models.Model):
+class Favorite(models.Model):
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
+        related_name='favorite_user'
     )
     recipe = models.ForeignKey(
         Recipe,
         on_delete=models.CASCADE,
+        related_name='favorite_recipe'
     )
     in_bookmarks = models.BooleanField(default=False)
 
     def __str__(self):
-        return f'{self.user.username}, {self.recipe.title}, {self.in_bookmarks}'
+        return f'{self.user}, {self.recipe.title}, {self.in_bookmarks}'
 
     class Meta:
+        unique_together = ('user', 'recipe')
         verbose_name = 'Избранное'
         verbose_name_plural = 'Избранное'
+
+
+class Follow(models.Model):
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='follower'
+    )
+    author = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='following'
+    )
+
+    def __str__(self):
+        return f'follower - {self.user} | following - {self.author}'
+
+    class Meta:
+        unique_together = ('user', 'author')
+        verbose_name = 'Подписка'
+        verbose_name_plural = 'Подписки'
+
+
+class Purchase(models.Model):
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='purchases',
+        verbose_name='Покупатель'
+    )
+    recipe = models.ForeignKey(
+        Recipe,
+        on_delete=models.CASCADE,
+        related_name='purchase_recipe',
+        verbose_name='Список рецептов'
+    )
+
+    def __str__(self):
+        return self.recipe.title
+
+    class Meta:
+        unique_together = ('user', 'recipe')
+        verbose_name = 'Покупка'
+        verbose_name_plural = 'Покупки'

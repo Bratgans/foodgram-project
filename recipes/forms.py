@@ -1,4 +1,5 @@
 from django import forms
+from django.forms import CheckboxSelectMultiple
 
 from recipes.models import Recipe
 
@@ -8,11 +9,12 @@ class RecipeForm(forms.ModelForm):
         model = Recipe
         fields = [
             'title',
+            'tags',
             'cook_time',
             'description',
-            'image',
-            'tag'
+            'image'
         ]
         widgets = {
                    'description': forms.Textarea(attrs={'rows': 8}),
+                   'tags': CheckboxSelectMultiple()
                    }

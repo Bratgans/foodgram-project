@@ -3,10 +3,90 @@ from django.urls import path
 from recipes import views
 
 urlpatterns = [
-    path('', views.index, name='index'),
-    path('shopping_list', views.shopping_list, name='shopping_list'),
-    path('create_recipe', views.create_recipe, name='create_recipe'),
-    path('subscriptions', views.subscriptions, name='subscriptions'),
-    path('favorites', views.favorites, name='favorites'),
-    path('<str:username>/<int:recipe_id>/', views.recipe_view, name='recipe'),
+    path(
+        'recipe/<int:recipe_id>/',
+        views.recipe_view,
+        name='recipe'
+    ),
+    path(
+        'create_recipe/',
+        views.create_recipe,
+        name='create_recipe'
+    ),
+    path(
+        'recipe_edit/<int:recipe_id>',
+        views.recipe_edit,
+        name='recipe_edit'
+    ),
+    path(
+        'recipe_delete/<int:recipe_id>',
+        views.recipe_delete,
+        name='recipe_delete'
+    ),
+    path(
+        'ingredients/',
+        views.Ingredients.as_view(),
+        name='ingredients'
+    ),
+    path(
+        'purchases/',
+        views.Purchases.as_view()
+    ),
+    path(
+        'purchases/<int:recipe_id>/',
+        views.Purchases.as_view()
+    ),
+    path(
+        'purchase_recipe_delete/<int:recipe_id>/',
+        views.purchase_recipe_delete,
+        name='purchase_recipe_delete'
+    ),
+    path(
+        'purchase_list/',
+        views.purchase_list,
+        name='purchase_list'
+    ),
+    path(
+        'purchase_list_download/',
+        views.purchase_list_download,
+        name='purchase_list_download'
+    ),
+    path(
+        'follow_list/',
+        views.follow_list,
+        name='follow_list'
+    ),
+    path(
+        'follow/',
+        views.Following.as_view()
+    ),
+    path(
+        'unfollow/<int:author_id>/',
+        views.Following.as_view()
+    ),
+    path(
+        'favorite_recipes/',
+        views.favorites,
+        name='favorites'
+    ),
+    path(
+        'favorites/',
+        views.Favorites.as_view(),
+        name='add_favorites'
+    ),
+    path(
+        'favorites/<int:recipe_id>/',
+        views.Favorites.as_view(),
+        name='delete_favorites'
+    ),
+    path(
+        '<str:username>/',
+        views.profile,
+        name='profile'
+    ),
+    path(
+        '',
+        views.index,
+        name='index'
+    ),
 ]

@@ -1,13 +1,16 @@
+{% load templates_filters %}
 {% if page.has_other_pages %}
     <nav class="pagination" aria-label="{{ aria_label }}">
         <ul class="pagination__container">
-            <li class="pagination__item"><a class="pagination__link link" href="#"><span class="icon-left"></span></a></li>
-            <li class="pagination__item pagination__item_active"><a class="pagination__link link" href="#">1</a></li>
-            <li class="pagination__item"><a class="pagination__link link" href="#">2</a></li>
-            <li class="pagination__item"><a class="pagination__link link" href="#">3</a></li>
-            <li class="pagination__item"><a class="pagination__link link" href="#">4</a></li>
-            <li class="pagination__item"><a class="pagination__link link" href="#">5</a></li>
-            <li class="pagination__item"><a class="pagination__link link" href="#"><span class="icon-right"></span></a></li>
+            {% if page.has_previous %}
+                <li class="pagination__item"><a class="pagination__link link" href="?{{ request|url_with_get:page.previous_page_number }}"><span class="icon-left"></span></a></li>
+            {% endif %}
+            {% for page_number in paginator.page_range %}
+                <li class="pagination__item {% if page.number == page_number %}pagination__item_active{% endif %}"><a class="pagination__link link" href="?{{ request|url_with_get:page_number }}">{{ page_number }}</a></li>
+            {% endfor %}
+            {% if page.has_next %}
+                <li class="pagination__item"><a class="pagination__link link" href="?{{ request|url_with_get:page.next_page_number }}"><span class="icon-right"></span></a></li>
+            {% endif %}
         </ul>
     </nav>
 {% endif %}
