@@ -126,7 +126,11 @@ def recipe_edit(request, recipe_id):
     ingredients = get_ingredients(request)
     if form.is_valid():
         IngredientRecipe.objects.filter(recipe=recipe).delete()
-        save_ingredients(form=form, author=recipe.author, ingredients=ingredients)
+        save_ingredients(
+            form=form,
+            author=recipe.author,
+            ingredients=ingredients
+        )
         return redirect('recipe', recipe_id=recipe.id)
     return render(request,
                   'form_recipe.html',

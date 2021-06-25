@@ -6,7 +6,7 @@ load_dotenv()
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-SECRET_KEY = os.environ.get('SECRET_KEY') or 'p&l%385148kslhtyn^##a1)ilz@4zqj=rq&agdol^##zgl9(vs'
+SECRET_KEY = os.environ.get('SECRET_KEY') or 'dev'
 
 DEBUG = True
 
@@ -75,12 +75,12 @@ DATABASES = {
 """DB for Deploy"""
 # DATABASES = {
 #     'default': {
-#         'ENGINE': os.environ.get('DB_ENGINE') or 'django.db.backends.postgresql',
-#         'NAME': os.environ.get('DB_NAME') or 'postgres',
-#         'USER': os.environ.get('POSTGRES_USER') or 'postgres',
-#         'PASSWORD': os.environ.get('POSTGRES_PASSWORD') or 'postgres',
-#         'HOST': os.environ.get('DB_HOST') or 'db',
-#         'PORT': os.environ.get('DB_PORT') or '5432',
+#         'ENGINE': os.environ.get('DB_ENGINE'),
+#         'NAME': os.environ.get('DB_NAME'),
+#         'USER': os.environ.get('POSTGRES_USER'),
+#         'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
+#         'HOST': os.environ.get('DB_HOST'),
+#         'PORT': os.environ.get('DB_PORT'),
 #     }
 # }
 
@@ -155,4 +155,3 @@ EMAIL_HOST_USER = os.getenv('GMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('GMAIL_HOST_PASSWORD')
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
-
