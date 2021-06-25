@@ -1,10 +1,10 @@
 {% load templates_filters %}
-{% if user.is_authenticated %}
-    {% if recipe.author != user %}
-        {% if recipe|is_favorite:user %}
-            <button class="button button_style_none" name="favorites" data-out><span class="icon-favorite icon-favorite_active"></span></button>
-        {% else %}
-            <button class="button button_style_none" name="favorites" data-out><span class="icon-favorite"></span></button>
-        {% endif %}
+{% if user.is_authenticated and recipe.author != user %}
+    {% if recipe|is_favorite:user %}
+        <button class="button button_style_none" name="favorites" data-out><span class="icon-favorite {% if recipe_view %}icon-favorite_big{% endif %} icon-favorite_active"></span></button>
+        {% if recipe_view %}<div class="single-card__favorite-tooltip tooltip">Удалить из избранного</div>{% endif %}
+    {% else %}
+        <button class="button button_style_none" name="favorites" data-out><span class="icon-favorite {% if recipe_view %}icon-favorite_big{% endif %}"></span></button>
+        {% if recipe_view %}<div class="single-card__favorite-tooltip tooltip">Добавить в избранное</div>{% endif %}
     {% endif %}
 {% endif %}

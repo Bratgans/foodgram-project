@@ -15,15 +15,9 @@
             <h1 class="main__title">{{ profile.first_name }}</h1>
             {% include 'includes/tags.html' %}
         </div>
-        {% if user.id != profile.id and user.is_authenticated %}
-            <div class="author-subscribe" data-author="{{ profile.id }}">
-                {% if profile|is_follow:user %}
-                    <p style="padding: 0 0 2em 0;"><button class="button button_style_light-blue button_size_auto" name="subscribe"><span class="icon-check button__icon"></span>Отписаться от автора </button></p>
-                {% else %}
-                    <p style="padding: 0 0 2em 0;"><button class="button button_style_light-blue button_size_auto" name="subscribe" data-out>Подписаться на автора</button></p>
-                {% endif %}
-            </div>
-        {% endif %}
+        <div class="author-subscribe" data-author="{{ profile.id }}">
+            {% include 'includes/follow_button.html' with author=profile %}
+        </div>
         <div class="card-list">
             {% for recipe in page %}
                 {% include 'includes/recipe_card.html' %}

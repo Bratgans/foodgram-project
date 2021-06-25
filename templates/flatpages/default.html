@@ -7,7 +7,6 @@
 {% block content %}
     {% include 'includes/header.html' with index=True %}
     {% csrf_token %}
-    {% load user_filters %}
     <main class="main container">
         <div class="container">
             <h1>{{ flatpage.title }}</h1>

@@ -12,12 +12,15 @@ from .forms import RecipeForm
 from .models import (Favorite, Follow, Ingredient, IngredientRecipe, Purchase,
                      Recipe, Tag, User)
 
+JSON_TRUE = JsonResponse({'success': True})
+JSON_FALSE = JsonResponse({'success': False})
+
 
 def get_all_tags():
     all_tags = Tag.objects.all()
     tags_list = []
     for tag in all_tags:
-        tags_list.append(tag.slug)
+        tags_list.append(tag.title)
     return tags_list
 
 
@@ -33,6 +36,21 @@ def get_ingredients(request):
                 request.POST[f'valueIngredient_{_[1]}']
             )
     return ingredients
+
+
+def save_ingredients(form, author, ingredients):
+    recipe = form.save(commit=False)
+    recipe.author = author
+    recipe.save()
+    for title, value in ingredients.items():
+        ingredient = get_object_or_404(Ingredient, title=title)
+        recipe_ingredient = IngredientRecipe(
+            value=value,
+            ingredient=ingredient,
+            recipe=recipe
+        )
+        recipe_ingredient.save()
+    form.save_m2m()
 
 
 def index(request):
@@ -63,27 +81,13 @@ def create_recipe(request):
     """
     author = get_object_or_404(User, username=request.user)
     tags = Tag.objects.all()
-    if request.method == 'POST':
-        form = RecipeForm(
-            request.POST or None, files=request.FILES or None
-        )
-        ingredients = get_ingredients(request)
-        if not ingredients:
-            form.add_error(None, 'Добавьте ингредиенты')
-        elif form.is_valid():
-            recipe = form.save(commit=False)
-            recipe.author = author
-            recipe.save()
-            for title, value in ingredients.items():
-                ingredient = get_object_or_404(Ingredient, title=title)
-                recipe_ingredient = IngredientRecipe(
-                    value=value,
-                    ingredient=ingredient,
-                    recipe=recipe
-                )
-                recipe_ingredient.save()
-            form.save_m2m()
-            return redirect('index')
+    form = RecipeForm(
+        request.POST or None, files=request.FILES or None
+    )
+    ingredients = get_ingredients(request)
+    if form.is_valid():
+        save_ingredients(form=form, author=author, ingredients=ingredients)
+        return redirect('index')
     else:
         form = RecipeForm()
     return render(
@@ -122,18 +126,7 @@ def recipe_edit(request, recipe_id):
     ingredients = get_ingredients(request)
     if form.is_valid():
         IngredientRecipe.objects.filter(recipe=recipe).delete()
-        recipe = form.save(commit=False)
-        recipe.author = request.user
-        recipe.save()
-        for title, value in ingredients.items():
-            ingredient = get_object_or_404(Ingredient, title=title)
-            recipe_ingredient = IngredientRecipe(
-                value=value,
-                ingredient=ingredient,
-                recipe=recipe
-            )
-            recipe_ingredient.save()
-        form.save_m2m()
+        save_ingredients(form=form, author=recipe.author, ingredients=ingredients)
         return redirect('recipe', recipe_id=recipe.id)
     return render(request,
                   'form_recipe.html',
@@ -163,7 +156,7 @@ def profile(request, username):
     profile = get_object_or_404(User, username=username)
     tags_list = request.GET.getlist('tags')
     if not tags_list:
-        tags_list = ['breakfast', 'lunch', 'dinner']
+        tags_list = get_all_tags()
     recipes = Recipe.objects.filter(
         author=profile, tags__title__in=tags_list
     ).prefetch_related('tags').distinct()
@@ -186,10 +179,14 @@ def favorites(request):
     """
     tags_list = request.GET.getlist('tags')
     if not tags_list:
-        tags_list = ['breakfast', 'lunch', 'dinner']
-    recipes = Recipe.objects.select_related('author').prefetch_related(
+        tags_list = get_all_tags()
+    recipes = Recipe.objects.select_related(
+        'author'
+    ).prefetch_related(
         'tags',
-    ).filter(favorite_recipe__user=request.user)
+    ).filter(
+        favorite_recipe__user=request.user
+    )
     paginator = Paginator(recipes, settings.RECIPE_PER_PAGE)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
@@ -229,13 +226,16 @@ def purchase_list_download(request):
     user = request.user
     shopping = user.purchases.all().values_list('recipe_id', flat=True)
     ingredients = IngredientRecipe.objects.values(
-        'ingredient_id__title', 'ingredient_id__dimension').filter(
-        recipe_id__in=list(shopping)).annotate(
-        total=Sum('value')).order_by('ingredient')
-    file_data = 'Список покупок с сайта FoodGram. \n'
+        'ingredient_id__title', 'ingredient_id__dimension'
+    ).filter(
+        recipe_id__in=list(shopping)
+    ).annotate(
+        total=Sum('value')
+    ).order_by('ingredient')
+    file_data = ['Список покупок с сайта FoodGram. \n']
     for item in ingredients:
         line = ' '.join(str(value) for value in item.values())
-        file_data += line + '\n'
+        file_data.append(line + '\n')
     response = HttpResponse(
         file_data, content_type='application/text charset=utf-8'
     )
@@ -271,7 +271,7 @@ class Favorites(View):
 
         Favorite.objects.get_or_create(
             user=request.user, recipe=recipe)
-        return JsonResponse({'success': True})
+        return JSON_TRUE
 
     def delete(self, request, recipe_id):
         recipe = get_object_or_404(Recipe, id=recipe_id)
@@ -279,8 +279,10 @@ class Favorites(View):
             Favorite,
             user=request.user,
             recipe=recipe)
-        favorite.delete()
-        return JsonResponse({'success': True})
+        if favorite:
+            favorite.delete()
+            return JSON_TRUE
+        return JSON_FALSE
 
 
 class Following(View):
@@ -292,14 +294,15 @@ class Following(View):
         author_id = json.loads(request.body).get('id')
         author = get_object_or_404(User, id=author_id)
         Follow.objects.get_or_create(user_id=request.user.id, author=author)
-        return JsonResponse({'success': True})
+        return JSON_TRUE
 
     def delete(self, request, author_id):
-        user = get_object_or_404(User, username=request.user.username)
         author = get_object_or_404(User, id=author_id)
-        following = get_object_or_404(Follow, user=user, author=author)
-        following.delete()
-        return JsonResponse({'success': True})
+        following = get_object_or_404(Follow, author=author)
+        if following:
+            following.delete()
+            return JSON_TRUE
+        return JSON_FALSE
 
 
 class Ingredients(View):
@@ -309,7 +312,7 @@ class Ingredients(View):
     def get(self, request):
         ingredient = request.GET['query']
         ingredients = list(Ingredient.objects.filter(
-            title__icontains=ingredient).values('title', 'dimension'))
+            title__istartswith=ingredient).values('title', 'dimension'))
         return JsonResponse(ingredients, safe=False)
 
 
@@ -322,24 +325,26 @@ class Purchases(View):
         recipe_id = json.loads(request.body).get('id')
         recipe = get_object_or_404(Recipe, id=recipe_id)
         Purchase.objects.get_or_create(user=request.user, recipe=recipe)
-        return JsonResponse({'success': True})
+        return JSON_TRUE
 
     def delete(self, request, recipe_id):
         recipe = get_object_or_404(Recipe, id=recipe_id)
         user = get_object_or_404(User, username=request.user.username)
         purchase = get_object_or_404(Purchase, user=user, recipe=recipe)
-        purchase.delete()
-        return JsonResponse({'success': True})
+        if purchase:
+            purchase.delete()
+            return JSON_TRUE
+        return JSON_FALSE
 
 
 def page_not_found(request, exception):
     return render(
         request,
-        "misc/404.html",
-        {"path": request.path},
+        'misc/404.html',
+        {'path': request.path},
         status=404
     )
 
 
 def server_error(request):
-    return render(request, "misc/500.html", status=500)
+    return render(request, 'misc/500.html', status=500)

@@ -88,7 +88,8 @@ class Recipe(models.Model):
         verbose_name='Тэги',
     )
     cook_time = models.PositiveIntegerField(
-        verbose_name='Время приготовления'
+        verbose_name='Время приготовления',
+        validators=[MinValueValidator(1)],
     )
 
     class Meta:
@@ -112,9 +113,7 @@ class IngredientRecipe(models.Model):
         related_name='ingredients_recipe',
         verbose_name='Рецепт',
     )
-    value = models.DecimalField(
-        max_digits=6,
-        decimal_places=1,
+    value = models.IntegerField(
         validators=[MinValueValidator(1)],
         verbose_name='Кол-во',
         help_text='Введите кол-во продукта',
@@ -145,10 +144,9 @@ class Favorite(models.Model):
         on_delete=models.CASCADE,
         related_name='favorite_recipe'
     )
-    in_bookmarks = models.BooleanField(default=False)
 
     def __str__(self):
-        return f'{self.user}, {self.recipe.title}, {self.in_bookmarks}'
+        return f'{self.user}, {self.recipe.title}'
 
     class Meta:
         unique_together = ('user', 'recipe')

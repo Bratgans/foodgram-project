@@ -17,16 +17,7 @@
                 <div class="single-card__header-info">
                     <h1 class="single-card__title">{{ recipe.title }}</h1>
                     <div class="single-card__favorite">
-                        {% if user.is_authenticated %}
-                            {% load templates_filters %}
-                            {% if recipe|is_favorite:user %}
-                                <button class="button button_style_none" name="favorites" ><span class="icon-favorite icon-favorite_big icon-favorite_active"></span></button>
-                                <div class="single-card__favorite-tooltip tooltip">Удалить из избранного</div>
-                            {% else %}
-                                <button class="button button_style_none" name="favorites" data-out><span class="icon-favorite icon-favorite_big"></span></button>
-                                <div class="single-card__favorite-tooltip tooltip">Добавить в избранное</div>
-                            {% endif %}
-                        {% endif %}
+                        {% include 'includes/favorite_button.html' with recipe_view=True %}
                     </div>
                 </div>
                 <ul class="single-card__items">
@@ -38,10 +29,8 @@
                     <p class="single-card__text"><span class="icon-time"></span>&#160;&#160;{{ recipe.cook_time }}&#160;мин</p>
                     <ul class="single-card__items">
                         <li class="single-card__item"><p class="single-card__text"><span class="icon-user"></span>&#160;&#160;<a href="{% url 'profile' recipe.author.username %}">{{ recipe.author.first_name }}</a></p></li>
-                        {% if user.is_authenticated %}
-                            {% if recipe.author == request.user %}
-                                <li class="single-card__item">  <a style="margin-left: 2.5em" href="{% url 'recipe_edit' recipe.id %}" class="single-card__text">Редактировать рецепт</a></li>
-                            {% endif %}
+                        {% if user.is_authenticated and recipe.author == request.user or user.is_staff %}
+                            <li class="single-card__item">  <a style="margin-left: 2.5em" href="{% url 'recipe_edit' recipe.id %}" class="single-card__text">Редактировать рецепт</a></li>
                         {% endif %}
                     </ul>
                 </div>

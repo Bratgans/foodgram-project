@@ -14,12 +14,12 @@ urlpatterns = [
         name='create_recipe'
     ),
     path(
-        'recipe_edit/<int:recipe_id>',
+        'recipe/<int:recipe_id>/edit',
         views.recipe_edit,
         name='recipe_edit'
     ),
     path(
-        'recipe_delete/<int:recipe_id>',
+        'recipe/<int:recipe_id>/delete',
         views.recipe_delete,
         name='recipe_delete'
     ),
@@ -37,7 +37,7 @@ urlpatterns = [
         views.Purchases.as_view()
     ),
     path(
-        'purchase_recipe_delete/<int:recipe_id>/',
+        'purchases/<int:recipe_id>/delete',
         views.purchase_recipe_delete,
         name='purchase_recipe_delete'
     ),
@@ -47,7 +47,7 @@ urlpatterns = [
         name='purchase_list'
     ),
     path(
-        'purchase_list_download/',
+        'purchase_list/download',
         views.purchase_list_download,
         name='purchase_list_download'
     ),

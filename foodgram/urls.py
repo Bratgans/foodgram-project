@@ -7,11 +7,15 @@ handler500 = "recipes.views.server_error"
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('recipes.urls'), name='recipes'),
     path('auth/', include('users.urls'), name='login'),
     path('auth/', include('django.contrib.auth.urls')),
-    path("author/", views.flatpage, {"url": "author/"},
-         name="about_author"),
-    path("spec/", views.flatpage, {"url": "spec/"},
-         name="about_spec"),
+    path('about/', include('django.contrib.flatpages.urls')),
+    path('', include('recipes.urls'), name='recipes'),
+]
+
+urlpatterns += [
+    path('author/', views.flatpage, {'url': '/author/'},
+         name='author'),
+    path('spec/', views.flatpage, {'url': '/spec/'},
+         name='spec'),
 ]

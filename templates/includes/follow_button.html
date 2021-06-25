@@ -1,11 +1,9 @@
 {% load templates_filters %}
 
-{% if request.user != recipe.author %}
-    {% if user.is_authenticated %}
-        {% if recipe.author|is_follow:request.user %}
-            <li class="single-card__item"><button class="button button_style_light-blue button_size_subscribe" name="subscribe"><span class="icon-check button__icon"></span> Отписаться от автора </button></li>
-        {% else %}
-            <li class="single-card__item"><button class="button button_style_light-blue button_size_subscribe" name="subscribe" data-out>Подписаться на автора</button></li>
-        {% endif %}
+{% if user.is_authenticated and request.user != recipe.author %}
+    {% if recipe.author|is_follow:request.user %}
+        <button class="button button_style_light-blue button_size_subscribe" name="subscribe"><span class="icon-check button__icon"></span> Отписаться от автора </button>
+    {% else %}
+        <button class="button button_style_light-blue button_size_subscribe" name="subscribe" data-out>Подписаться на автора</button>
     {% endif %}
 {% endif %}

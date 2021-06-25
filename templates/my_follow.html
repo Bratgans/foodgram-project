@@ -13,7 +13,9 @@
             <h1 class="main__title">Мои подписки</h1>
         </div>
         <div class="card-list">
-            {% include 'includes/follow_card.html' %}
+            {% for follow in page %}
+                {% include 'includes/follow_card.html' %}
+            {% endfor %}
         </div>
         {% if page.has_other_pages %}
             <ul class="pagination justify-content-center">

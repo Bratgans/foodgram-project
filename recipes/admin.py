@@ -13,9 +13,9 @@ class RecipeAdmin(admin.ModelAdmin):
     """
         Настройка админки для рецептов
     """
-    list_display = ("pk", "author", "title")
-    search_fields = ("text",)
-    list_filter = ("author", "title", "tags")
+    list_display = ('pk', 'author', 'title')
+    search_fields = ('text',)
+    list_filter = ('author', 'title', 'tags')
     inlines = [
         IngredientRecipeInline,
     ]
@@ -35,27 +35,27 @@ class IngredientAdmin(admin.ModelAdmin):
     """
         Настройка админки для ингредиентов
     """
-    list_display = ("pk", "title", "dimension")
-    search_fields = ("title",)
-    list_filter = ("title",)
+    list_display = ('pk', 'title', 'dimension')
+    search_fields = ('title',)
+    list_filter = ('title',)
 
 
 class PurchaseAdmin(admin.ModelAdmin):
     """
         Настройка админки для покупок
     """
-    list_display = ("user", "recipe")
-    search_fields = ("user",)
-    list_filter = ("user",)
+    list_display = ('user', 'recipe')
+    search_fields = ('user',)
+    list_filter = ('user',)
 
 
 class FollowAdmin(admin.ModelAdmin):
     """
         Настройка админки для подписок
     """
-    list_display = ("user", "author")
-    search_fields = ("user",)
-    list_filter = ("user",)
+    list_display = ('user', 'author')
+    search_fields = ('user',)
+    list_filter = ('user',)
 
 
 admin.site.register(Purchase, PurchaseAdmin)

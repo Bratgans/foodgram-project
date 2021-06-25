@@ -1,4 +1,5 @@
 import json
+import logging
 
 from django.core.management.base import BaseCommand
 
@@ -18,4 +19,4 @@ class Command(BaseCommand):
                     title=item['title'],
                     dimension=item['dimension'],
                 )
-        print('Loaded successfully!')
+        logging.info('Loaded successfully!')

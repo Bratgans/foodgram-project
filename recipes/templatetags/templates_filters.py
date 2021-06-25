@@ -7,7 +7,26 @@ register = template.Library()
 
 
 @register.filter()
+def rupluralize(value, endings):
+    """
+        Изменение окончания в зависимости от кол-ва
+    """
+    endings = endings.split(',')
+    if value % 100 in (11, 12, 13, 14):
+        return endings[2]
+    if value % 10 == 1:
+        return endings[0]
+    if value % 10 in (2, 3, 4):
+        return endings[1]
+    else:
+        return endings[2]
+
+
+@register.filter()
 def url_with_get(request, number):
+    """
+        Получение номера страницы
+    """
     query = request.GET.copy()
     query['page'] = number
     return query.urlencode()
@@ -15,6 +34,9 @@ def url_with_get(request, number):
 
 @register.filter(name='get_filter_tags')
 def get_filter_tags(request, tag):
+    """
+        Получение тэгов
+    """
     new_request = request.GET.copy()
     if not request.GET.getlist('tags'):
         tags_list = get_all_tags()
@@ -31,7 +53,7 @@ def get_filter_tags(request, tag):
 @register.filter(name='is_favorite')
 def is_favorite(recipe, user):
     """
-    Проверка наличия рецепта в избранном
+        Проверка наличия рецепта в избранном
     """
     return Favorite.objects.filter(user=user, recipe=recipe).exists()
 
@@ -39,7 +61,7 @@ def is_favorite(recipe, user):
 @register.filter(name='is_follow')
 def is_follow(author, user):
     """
-    Проверка наличия рецепта в избранном
+        Проверка наличия подписки на автора
     """
     return Follow.objects.filter(user=user, author=author).exists()
 
@@ -57,5 +79,4 @@ def purchase_count(request, user_id):
     """
         Считает количество покупок для синего счетчика
     """
-    count = Purchase.objects.filter(user=user_id).count()
-    return count
+    return Purchase.objects.filter(user=user_id).count()
