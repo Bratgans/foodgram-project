@@ -7,19 +7,21 @@ register = template.Library()
 
 
 @register.filter()
-def rupluralize(value, endings):
+def rupluralize(value, word):
     """
-        Изменение окончания в зависимости от кол-ва
+        Изменение слова в зависимости от кол-ва
     """
-    endings = endings.split(',')
-    if value % 100 in (11, 12, 13, 14):
-        return endings[2]
-    if value % 10 == 1:
-        return endings[0]
-    if value % 10 in (2, 3, 4):
-        return endings[1]
-    else:
-        return endings[2]
+    number = abs(int(value))
+    word = word.split(',')
+    if (number % 100 == 1) or (number % 100 > 20) and (number % 10 == 1):
+        return word[0]
+    if (number % 100 == 2) or (number % 100 > 20) and (number % 10 == 2):
+        return word[1]
+    if (number % 100 == 3) or (number % 100 > 20) and (number % 10 == 3):
+        return word[1]
+    if (number % 100 == 4) or (number % 100 > 20) and (number % 10 == 4):
+        return word[1]
+    return word[2]
 
 
 @register.filter()
@@ -38,10 +40,9 @@ def get_filter_tags(request, tag):
         Получение тэгов
     """
     new_request = request.GET.copy()
+    tags_list = new_request.getlist('tags')
     if not request.GET.getlist('tags'):
         tags_list = get_all_tags()
-    else:
-        tags_list = new_request.getlist('tags')
     if tag.title in tags_list:
         tags_list.remove(tag.title)
         new_request.setlist('tags', tags_list)

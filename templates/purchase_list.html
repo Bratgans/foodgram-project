@@ -5,7 +5,6 @@
     <link rel="stylesheet" href="{% static 'pages/shopList.css' %}">
 {% endblock static %}
 {% block content %}
-    {% include 'includes/header.html' with purchase_list=True recipe=recipe %}
     {% csrf_token %}
     {% load thumbnail %}
     <main class="main container">
@@ -20,8 +19,8 @@
                         <div class="recipe recipe_reverse">
                             <img src="{{ recipe.recipe.image.url }}" alt="{{ recipe.recipe.title }}"
                                  class="recipe__image recipe__image_big">
-                            <h3 class="recipe__title"><a style="color: #000"
-                                                         href="{% url 'recipe' recipe.recipe.id %}">{{ recipe.recipe.title }}</a>
+                            <h3 class="recipe__title">
+                                <a class="recipe__title" href="{% url 'recipe' recipe.recipe.id %}">{{ recipe.recipe.title }}</a>
                             </h3>
                             <p class="recipe__text"><span class="icon-time"></span> {{ recipe.recipe.cook_time }} мин.
                             </p>

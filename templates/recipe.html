@@ -5,7 +5,6 @@
     <link rel="stylesheet" href="{% static 'pages/single.css' %}">
 {% endblock static %}
 {% block content %}
-    {% include 'includes/header.html' %}
     {% csrf_token %}
     <main class="main container">
         <div class="single-card" data-id={{ recipe.id }} data-author={{ recipe.author.id }}>
@@ -17,7 +16,7 @@
                 <div class="single-card__header-info">
                     <h1 class="single-card__title">{{ recipe.title }}</h1>
                     <div class="single-card__favorite">
-                        {% include 'includes/favorite_button.html' with recipe_view=True %}
+                        {% include 'includes/buttons/favorite_button.html' with recipe_view=True %}
                     </div>
                 </div>
                 <ul class="single-card__items">
@@ -35,8 +34,8 @@
                     </ul>
                 </div>
                 <ul class="single-card__items">
-                    {% include 'includes/purchase_button.html' %}
-                    {% include 'includes/follow_button.html' %}
+                    {% include 'includes/buttons/purchase_button.html' %}
+                    {% include 'includes/buttons/follow_button.html' %}
                 </ul>
                 <div class="single-card__section">
                     <h3 class="single-card__section-title">Ингридиенты:</h3>

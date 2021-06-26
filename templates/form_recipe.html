@@ -5,7 +5,6 @@
     <link rel="stylesheet" href="{% static 'pages/form.css' %}">
 {% endblock static %}
 {% block content %}
-    {% include 'includes/header.html' with create_recipe=True %}
     {% load templates_filters %}
     {% load user_filters %}
     <main class="main container">
@@ -70,9 +69,9 @@
                         </div>
                         <span class="form__ingredient-link" id="addIng">Добавить ингредиент</span>
                         <span class="form__error">
-                        {% if form.non_field_errors %}
+                        {% if errors %}
                             <div class="non-field-errors">
-                                {% for error in form.non_field_errors %}
+                                {% for error in errors %}
                                     <p class="form-error">{{ error }}</p>
                                 {% endfor %}
                             </div>

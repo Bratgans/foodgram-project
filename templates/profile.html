@@ -5,7 +5,6 @@
     <link rel="stylesheet" href="{% static 'pages/index.css' %}">
 {% endblock static %}
 {% block content %}
-    {% include 'includes/header.html' %}
     {% csrf_token %}
     {% load user_filters %}
     {% load templates_filters %}
@@ -16,18 +15,14 @@
             {% include 'includes/tags.html' %}
         </div>
         <div class="author-subscribe" data-author="{{ profile.id }}">
-            {% include 'includes/follow_button.html' with author=profile %}
+            {% include 'includes/buttons/follow_button.html' with author=profile %}
         </div>
         <div class="card-list">
             {% for recipe in page %}
                 {% include 'includes/recipe_card.html' %}
             {% endfor %}
         </div>
-        {% if page.has_other_pages %}
-            <ul class="pagination justify-content-center">
-                {% include "includes/pagination.html" with aria_label='Search results pages' %}
-            </ul>
-        {% endif %}
+        {% include "includes/pagination.html" with aria_label='Search results pages' %}
     </main>
 {% endblock content %}
 {% block scripts %}

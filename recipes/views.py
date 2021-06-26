@@ -86,10 +86,11 @@ def create_recipe(request):
     )
     ingredients = get_ingredients(request)
     if form.is_valid():
+        if not ingredients:
+            form.add_error(None, 'Добавьте ингредиенты')
         save_ingredients(form=form, author=author, ingredients=ingredients)
         return redirect('index')
-    else:
-        form = RecipeForm()
+    form = RecipeForm()
     return render(
         request,
         'form_recipe.html',
@@ -148,7 +149,7 @@ def recipe_delete(request, recipe_id):
         Удаление рецепта
     """
     recipe = get_object_or_404(Recipe, id=recipe_id)
-    if request.user == recipe.author:
+    if request.user == recipe.author or request.user.is_staff:
         recipe.delete()
     return redirect('index')
 
@@ -236,12 +237,13 @@ def purchase_list_download(request):
     ).annotate(
         total=Sum('value')
     ).order_by('ingredient')
-    file_data = ['Список покупок с сайта FoodGram. \n']
+    file_data = ['Список покупок с сайта FoodGram:']
     for item in ingredients:
         line = ' '.join(str(value) for value in item.values())
-        file_data.append(line + '\n')
+        file_data.append(line)
+    data = '\n'.join(file_data)
     response = HttpResponse(
-        file_data, content_type='application/text charset=utf-8'
+        data, content_type='application/text charset=utf-8'
     )
     response['Content-Disposition'] = 'attachment; filename="ShoppingList.txt"'
     return response

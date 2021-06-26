@@ -2,8 +2,8 @@ from django.contrib import admin
 from django.contrib.flatpages import views
 from django.urls import include, path
 
-handler404 = "recipes.views.page_not_found"
-handler500 = "recipes.views.server_error"
+handler404 = 'recipes.views.page_not_found'
+handler500 = 'recipes.views.server_error'
 
 urlpatterns = [
     path('admin/', admin.site.urls),

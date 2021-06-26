@@ -5,7 +5,6 @@
     <link rel="stylesheet" href="{% static 'pages/index.css' %}">
 {% endblock static %}
 {% block content %}
-    {% include 'includes/header.html' %}
     {% csrf_token %}
     {% load user_filters %}
     {% load thumbnail %}
@@ -19,11 +18,7 @@
                 {% include 'includes/recipe_card.html' with recipe=recipe %}
             {% endfor %}
         </div>
-        {% if page.has_other_pages %}
-            <ul class="pagination justify-content-center">
-                {% include "includes/pagination.html" with aria_label='Search results pages' %}
-            </ul>
-        {% endif %}
+        {% include "includes/pagination.html" with aria_label='Search results pages' %}
     </main>
 {% endblock content %}
 {% block scripts %}

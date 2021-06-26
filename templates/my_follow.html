@@ -5,7 +5,6 @@
     <link rel="stylesheet" href="{% static 'pages/myFollow.css' %}">
 {% endblock static %}
 {% block content %}
-    {% include 'includes/header.html' %}
     {% csrf_token %}
     {% load thumbnail %}
     <main class="main container">
@@ -17,11 +16,7 @@
                 {% include 'includes/follow_card.html' %}
             {% endfor %}
         </div>
-        {% if page.has_other_pages %}
-            <ul class="pagination justify-content-center">
-                {% include "includes/pagination.html" with aria_label='Search results pages' %}
-            </ul>
-        {% endif %}
+        {% include "includes/pagination.html" with aria_label='Search results pages' %}
     </main>
 {% endblock content %}
 {% block scripts %}
