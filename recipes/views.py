@@ -57,6 +57,7 @@ def index(request):
     """
         Главная страница
     """
+    all_tags = Tag.objects.all()
     tags_list = request.GET.getlist('tags')
     if not tags_list:
         tags_list = get_all_tags()
@@ -70,6 +71,7 @@ def index(request):
         'page': page,
         'paginator': paginator,
         'tags_list': tags_list,
+        'all_tags': all_tags,
     }
     return render(request, 'index.html', context)
 
