@@ -7,21 +7,26 @@ register = template.Library()
 
 
 @register.filter()
-def rupluralize(value, word):
+def rupluralize(value):
     """
         Изменение слова в зависимости от кол-ва
     """
-    number = abs(int(value))
-    word = word.split(',')
-    if (number % 100 == 1) or (number % 100 > 20) and (number % 10 == 1):
-        return word[0]
-    if (number % 100 == 2) or (number % 100 > 20) and (number % 10 == 2):
-        return word[1]
-    if (number % 100 == 3) or (number % 100 > 20) and (number % 10 == 3):
-        return word[1]
-    if (number % 100 == 4) or (number % 100 > 20) and (number % 10 == 4):
-        return word[1]
-    return word[2]
+    plural_words = {
+        '1': 'рецепт',
+        '2': 'рецепта',
+        '3': 'рецептов',
+    }
+    value -= 3
+    word = plural_words['3']
+    if (value % 100 == 1) or (value % 100 > 20) and (value % 10 == 1):
+        word = plural_words['1']
+    if (value % 100 == 2) or (value % 100 > 20) and (value % 10 == 2):
+        word = plural_words['2']
+    if (value % 100 == 3) or (value % 100 > 20) and (value % 10 == 3):
+        word = plural_words['2']
+    if (value % 100 == 4) or (value % 100 > 20) and (value % 10 == 4):
+        word = plural_words['2']
+    return f'Еще {value} {word}...'
 
 
 @register.filter()

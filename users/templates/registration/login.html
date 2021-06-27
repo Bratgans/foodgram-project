@@ -15,15 +15,7 @@
                 {% csrf_token %}
                 {% for field in form %}
                     {% include 'registration/includes/form.html' %}
-                    {% if field.help_text %}
-                        <p class="form__info-text">
-                            <span class="form__input-info">{{ field.help_text }}</span>
-                        </p>
-                    {% endif %}
                 {% endfor %}
-                {% if form.errors %}
-                    <span class="form__error">{{form.non_field_errors}}</span>
-                {% endif %}
                 <div class="form__footer">
                     <button type="submit" class="button button_style_blue">Войти</button>
                     <a href="{% url 'password_reset' %}" class="form__forgot-link">Забыли пароль?</a>

@@ -6,7 +6,6 @@
 {% endblock static %}
 {% block content %}
     {% csrf_token %}
-    {% load user_filters %}
     {% load thumbnail %}
     <main class="main container">
         <div class="main__header">
@@ -23,7 +22,6 @@
 {% endblock content %}
 {% block scripts %}
     <script src="{% static 'js/components/MainCards.js' %}"></script>
-
     <script src="{% static 'js/components/Purchases.js' %}"></script>
     <script src="{% static 'js/components/Favorites.js' %}"></script>
 

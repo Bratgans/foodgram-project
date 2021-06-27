@@ -18,7 +18,7 @@
             {% endfor %}
             <li class="card-user__item">
                 {% if follow.author.recipes.all|length > 3 %}
-                    <a href="{% url 'profile' follow.author.username %}" class="card-user__link link">Еще {{ follow.author.recipes.all.count|add:-3 }} {{ follow.author.recipes.all.count|add:-3|rupluralize:'рецепт,рецепта,рецептов' }}...</a>
+                    <a href="{% url 'profile' follow.author.username %}" class="card-user__link link">{{ follow.author.recipes.all.count|rupluralize }}</a>
                 {% endif %}
             </li>
         </ul>

@@ -87,10 +87,14 @@ def create_recipe(request):
     ingredients = get_ingredients(request)
     if form.is_valid():
         if not ingredients:
-            form.add_error(None, 'Добавьте ингредиенты')
+            return render(request, 'form_recipe.html',
+                          {'form': form,
+                           'tags': tags,
+                           'new': True,
+                           'error': 'Добавьте ингредиент.'}
+                          )
         save_ingredients(form=form, author=author, ingredients=ingredients)
         return redirect('index')
-    form = RecipeForm()
     return render(
         request,
         'form_recipe.html',
@@ -126,6 +130,14 @@ def recipe_edit(request, recipe_id):
     tags = recipe.tags.all()
     ingredients = get_ingredients(request)
     if form.is_valid():
+        if not ingredients:
+            return render(request, 'form_recipe.html',
+                          {'form': form,
+                           'recipe': recipe,
+                           'tags': tags,
+                           'new': False,
+                           'error': 'Добавьте ингредиент.'}
+                          )
         IngredientRecipe.objects.filter(recipe=recipe).delete()
         save_ingredients(
             form=form,
@@ -190,15 +202,15 @@ def favorites(request):
     ).prefetch_related(
         'tags',
     ).filter(
-        favorite_recipe__user=request.user
-    )
+        favorite_recipe__user=request.user,
+        tags__title__in=tags_list
+    ).distinct()
     paginator = Paginator(recipes, settings.RECIPE_PER_PAGE)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
     return render(request, 'favorite.html', {
         'page': page,
         'paginator': paginator,
-        'profile': profile,
         'recipes': recipes,
         'tags_list': tags_list,
     })
@@ -218,8 +230,9 @@ def purchase_recipe_delete(request, recipe_id):
     """
         Удаление рецепта из покупок
     """
-    recipe = get_object_or_404(Purchase, user=request.user, recipe=recipe_id)
-    recipe.delete()
+    recipe = get_object_or_404(Purchase, user=request.user, recipe_id=recipe_id)
+    if request.user == recipe.user:
+        recipe.delete()
     return redirect('purchase_list')
 
 
@@ -256,7 +269,7 @@ def follow_list(request):
     """
     follows = Follow.objects.select_related(
         'user', 'author'
-    ).filter(user=request.user)
+    ).filter(user=request.user).order_by('author_id')
     paginator = Paginator(follows, settings.RECIPE_PER_PAGE)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
@@ -280,11 +293,10 @@ class Favorites(View):
         return JSON_TRUE
 
     def delete(self, request, recipe_id):
-        recipe = get_object_or_404(Recipe, id=recipe_id)
         favorite = get_object_or_404(
             Favorite,
             user=request.user,
-            recipe=recipe)
+            recipe_id=recipe_id)
         if favorite:
             favorite.delete()
             return JSON_TRUE
@@ -303,8 +315,7 @@ class Following(View):
         return JSON_TRUE
 
     def delete(self, request, author_id):
-        author = get_object_or_404(User, id=author_id)
-        following = get_object_or_404(Follow, author=author)
+        following = get_object_or_404(Follow, author_id=author_id)
         if following:
             following.delete()
             return JSON_TRUE
@@ -334,9 +345,7 @@ class Purchases(View):
         return JSON_TRUE
 
     def delete(self, request, recipe_id):
-        recipe = get_object_or_404(Recipe, id=recipe_id)
-        user = get_object_or_404(User, username=request.user.username)
-        purchase = get_object_or_404(Purchase, user=user, recipe=recipe)
+        purchase = get_object_or_404(Purchase, user=request.user, recipe_id=recipe_id)
         if purchase:
             purchase.delete()
             return JSON_TRUE
