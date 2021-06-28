@@ -10,11 +10,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY') or 'p&l%385148kslhtyn^##a1)ilz@4zqj=rq
 
 DEBUG = False
 
-ALLOWED_HOSTS = [
-    '84.252.141.9',
-    'bratgans.ga',
-    'www.bratgans.ga'
-]
+ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     'users',
