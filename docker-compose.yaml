@@ -7,7 +7,7 @@ services:
     env_file:
       - ./.env
   web:
-    build: .
+    build: bratgans/foodgram-project:latest
     restart: always
     volumes:
       - static_value:/var/html/static/
