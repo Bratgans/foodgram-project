@@ -232,7 +232,11 @@ def purchase_recipe_delete(request, recipe_id):
     """
         Удаление рецепта из покупок
     """
-    recipe = get_object_or_404(Purchase, user=request.user, recipe_id=recipe_id)
+    recipe = get_object_or_404(
+        Purchase,
+        user=request.user,
+        recipe_id=recipe_id
+    )
     if request.user == recipe.user:
         recipe.delete()
     return redirect('purchase_list')
@@ -347,7 +351,11 @@ class Purchases(View):
         return JSON_TRUE
 
     def delete(self, request, recipe_id):
-        purchase = get_object_or_404(Purchase, user=request.user, recipe_id=recipe_id)
+        purchase = get_object_or_404(
+            Purchase,
+            user=request.user,
+            recipe_id=recipe_id
+        )
         if purchase:
             purchase.delete()
             return JSON_TRUE
