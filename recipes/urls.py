@@ -80,7 +80,7 @@ urlpatterns = [
         name='delete_favorites'
     ),
     path(
-        '<str:username>/',
+        'users/<str:username>/',
         views.profile,
         name='profile'
     ),
