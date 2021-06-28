@@ -4,20 +4,22 @@
         Чтобы сбросить старый пароль — введите адрес электронной почты, под которым вы регистрировались.
     </p>
 {% endif %}
-<div class="form__group">
-    <label for="{{ field.id_for_label }}" class="form__label">
-        {{ field.label }}
-    </label>
-    <div class="form__field-group">
-        {{ field|addclass:"form__input" }}
-        {% if field.help_text %}
-            <span class="form__input-info">{{ field.help_text }}</span>
-        {% endif %}
-        {% for error in field.errors %}
-            <span class="form__error">{{ error|escape }}</span>
-        {% endfor %}
-        {% if form.errors %}
-            <span class="form__error">{{form.non_field_errors}}</span>
-        {% endif %}
+{% for field in form %}
+    <div class="form__group">
+        <label for="{{ field.id_for_label }}" class="form__label">
+            {{ field.label }}
+        </label>
+        <div class="form__field-group">
+            {{ field|addclass:"form__input" }}
+            {% if field.help_text %}
+                <span class="form__input-info">{{ field.help_text }}</span>
+            {% endif %}
+            {% for error in field.errors %}
+                <span class="form__error">{{ error|escape }}</span>
+            {% endfor %}
+            {% if form.errors %}
+                <span class="form__error">{{form.non_field_errors}}</span>
+            {% endif %}
+        </div>
     </div>
-</div>
+{% endfor %}

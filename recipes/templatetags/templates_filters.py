@@ -6,26 +6,26 @@ from recipes.views import get_all_tags
 register = template.Library()
 
 
+RECIPE = 'рецепт'
+FEW_RECIPE = 'рецепта'
+RECIPES = 'рецептов'
+
+
 @register.filter()
-def rupluralize(value):
+def recipe_plural(value):
     """
         Изменение слова в зависимости от кол-ва
     """
-    plural_words = {
-        '1': 'рецепт',
-        '2': 'рецепта',
-        '3': 'рецептов',
-    }
     value -= 3
-    word = plural_words['3']
+    word = RECIPES
     if (value % 100 == 1) or (value % 100 > 20) and (value % 10 == 1):
-        word = plural_words['1']
+        word = RECIPE
     if (value % 100 == 2) or (value % 100 > 20) and (value % 10 == 2):
-        word = plural_words['2']
+        word = FEW_RECIPE
     if (value % 100 == 3) or (value % 100 > 20) and (value % 10 == 3):
-        word = plural_words['2']
+        word = FEW_RECIPE
     if (value % 100 == 4) or (value % 100 > 20) and (value % 10 == 4):
-        word = plural_words['2']
+        word = FEW_RECIPE
     return f'Еще {value} {word}...'
 
 

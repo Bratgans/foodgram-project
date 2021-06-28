@@ -13,9 +13,7 @@
         <div class="form-container">
             <form class="form" method="post" action="{% url 'signup' %}">
                 {% csrf_token %}
-                {% for field in form %}
-                    {% include 'registration/includes/form.html' %}
-                {% endfor %}
+                {% include 'registration/includes/form.html' %}
                 <div class="form__footer">
                     <button type="submit" class="button button_style_blue">Создать аккаунт</button>
                 </div>
