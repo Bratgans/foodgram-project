@@ -16,7 +16,7 @@ JSON_TRUE = JsonResponse({'success': True})
 JSON_FALSE = JsonResponse({'success': False})
 
 
-def get_all_tags():
+def get_all_tags(request):
     all_tags = Tag.objects.all()
     tags_list = []
     for tag in all_tags:
@@ -60,7 +60,7 @@ def index(request):
     all_tags = Tag.objects.all()
     tags_list = request.GET.getlist('tags')
     if not tags_list:
-        tags_list = get_all_tags()
+        tags_list = get_all_tags(request)
     recipe_list = Recipe.objects.filter(
         tags__title__in=tags_list
     ).select_related('author').prefetch_related('tags').distinct()
@@ -175,7 +175,7 @@ def profile(request, username):
     profile = get_object_or_404(User, username=username)
     tags_list = request.GET.getlist('tags')
     if not tags_list:
-        tags_list = get_all_tags()
+        tags_list = get_all_tags(request)
     recipes = Recipe.objects.filter(
         author=profile, tags__title__in=tags_list
     ).prefetch_related('tags').distinct()

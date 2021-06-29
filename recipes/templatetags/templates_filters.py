@@ -46,8 +46,8 @@ def get_filter_tags(request, tag):
     """
     new_request = request.GET.copy()
     tags_list = new_request.getlist('tags')
-    if not request.GET.getlist('tags'):
-        tags_list = get_all_tags()
+    if not tags_list:
+        tags_list = get_all_tags(request)
     if tag.title in tags_list:
         tags_list.remove(tag.title)
         new_request.setlist('tags', tags_list)
