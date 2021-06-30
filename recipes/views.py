@@ -16,11 +16,9 @@ JSON_TRUE = JsonResponse({'success': True})
 JSON_FALSE = JsonResponse({'success': False})
 
 
-def get_all_tags(request):
+def get_all_tags():
     all_tags = Tag.objects.all()
-    tags_list = []
-    for tag in all_tags:
-        tags_list.append(tag.title)
+    tags_list = [tag.title for tag in all_tags]
     return tags_list
 
 
@@ -58,9 +56,9 @@ def index(request):
         Главная страница
     """
     all_tags = Tag.objects.all()
-    tags_list = request.GET.getlist('tags')
+    tags_list = request.GET.getlist('tag')
     if not tags_list:
-        tags_list = get_all_tags(request)
+        tags_list = get_all_tags()
     recipe_list = Recipe.objects.filter(
         tags__title__in=tags_list
     ).select_related('author').prefetch_related('tags').distinct()
@@ -173,9 +171,9 @@ def profile(request, username):
         Страница автора рецептов
     """
     profile = get_object_or_404(User, username=username)
-    tags_list = request.GET.getlist('tags')
+    tags_list = request.GET.getlist('tag')
     if not tags_list:
-        tags_list = get_all_tags(request)
+        tags_list = get_all_tags()
     recipes = Recipe.objects.filter(
         author=profile, tags__title__in=tags_list
     ).prefetch_related('tags').distinct()
@@ -196,7 +194,7 @@ def favorites(request):
     """
         Страница избранных рецептов
     """
-    tags_list = request.GET.getlist('tags')
+    tags_list = request.GET.getlist('tag')
     if not tags_list:
         tags_list = get_all_tags()
     recipes = Recipe.objects.select_related(

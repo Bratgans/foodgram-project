@@ -1,7 +1,6 @@
 from django import template
 
-from recipes.models import Favorite, Follow, Purchase
-from recipes.views import get_all_tags
+from recipes.models import Favorite, Follow, Purchase, Tag
 
 register = template.Library()
 
@@ -39,21 +38,30 @@ def url_with_get(request, number):
     return query.urlencode()
 
 
+@register.filter
+def get_tags(request):
+    return request.getlist("tag")
+
+
+@register.filter
+def all_tags(value):
+    return Tag.objects.all()
+
+
 @register.filter(name='get_filter_tags')
 def get_filter_tags(request, tag):
     """
         Получение тэгов
     """
-    new_request = request.GET.copy()
-    tags_list = new_request.getlist('tags')
-    if not tags_list:
-        tags_list = get_all_tags(request)
-    if tag.title in tags_list:
-        tags_list.remove(tag.title)
-        new_request.setlist('tags', tags_list)
+    request_copy = request.GET.copy()
+    request_copy["page"] = "1"
+    tags = request_copy.getlist("tag")
+    if tag.title in tags:
+        tags.remove(tag.title)
+        request_copy.setlist("tag", tags)
     else:
-        new_request.appendlist('tags', tag.title)
-    return new_request.urlencode()
+        request_copy.appendlist("tag", tag.title)
+    return request_copy.urlencode()
 
 
 @register.filter(name='is_favorite')
