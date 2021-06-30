@@ -5,7 +5,7 @@
     <link rel="stylesheet" href="{% static 'pages/index.css' %}">
 {% endblock static %}
 {% block content %}
-    {% include 'includes/header.html' with index=True %}
+    {% autoescape off %}
     {% csrf_token %}
     <main class="main container">
         <div class="container">
@@ -13,6 +13,7 @@
             {{ flatpage.content }}
         </div>
     </main>
+    {% endautoescape %}
 {% endblock %}
 {% block scripts %}
     <script src="{% static 'js/components/MainCards.js' %}"></script>
