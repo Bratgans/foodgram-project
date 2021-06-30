@@ -67,7 +67,6 @@ WSGI_APPLICATION = 'foodgram.wsgi.application'
 #         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
 #     }
 # }
-
 """DB for Deploy"""
 DATABASES = {
     'default': {
