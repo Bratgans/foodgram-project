@@ -20,6 +20,12 @@ class Ingredient(models.Model):
     )
 
     class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=('title', 'dimension'),
+                name='unique_ingredient_dimension'
+            )
+        ]
         verbose_name = 'Ингредиент'
         verbose_name_plural = 'Ингредиенты'
         db_table = 'recipes_ingredients'

@@ -174,17 +174,17 @@ def profile(request, username):
     tags_list = request.GET.getlist('tag')
     if not tags_list:
         tags_list = get_all_tags()
-    recipes = Recipe.objects.filter(
+    recipe = Recipe.objects.filter(
         author=profile, tags__title__in=tags_list
     ).prefetch_related('tags').distinct()
-    paginator = Paginator(recipes, settings.RECIPE_PER_PAGE)
+    paginator = Paginator(recipe, settings.RECIPE_PER_PAGE)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
     return render(request, 'profile.html', {
         'page': page,
         'paginator': paginator,
         'profile': profile,
-        'recipes': recipes,
+        'recipe': recipe,
         'tags_list': tags_list,
     })
 

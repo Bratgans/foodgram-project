@@ -5,7 +5,6 @@
     <link rel="stylesheet" href="{% static 'pages/index.css' %}">
 {% endblock static %}
 {% block content %}
-    {% csrf_token %}
     {% load user_filters %}
     {% load templates_filters %}
     {% load thumbnail %}
@@ -14,6 +13,7 @@
             <h1 class="main__title">{{ profile.first_name }}</h1>
             {% include 'includes/tags.html' %}
         </div>
+        {% csrf_token %}
         <div class="author-subscribe" data-author="{{ profile.id }}">
             {% include 'includes/buttons/follow_button.html' with author=profile %}
         </div>

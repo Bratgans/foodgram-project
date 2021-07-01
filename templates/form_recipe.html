@@ -28,7 +28,7 @@
                             {% for tag in form.fields.tags.choices.queryset %}
                                 <div class="tags__item">
                                     <input type="checkbox" name="tags" value="{{ tag.id }}"
-                                            {% if tag.id in form.tag.title %} checked {% endif %}
+                                            {% if tag in recipe.tags.all %} checked {% endif %}
                                            id="id_{{ tag.title }}"  class="tags__checkbox tags__checkbox_style_{{ tag.color }}">
                                     <label for="id_{{ tag.title }}" class="tags__label">{{ tag.display_name }}</label>
                                 </div>
@@ -60,13 +60,7 @@
                             {% endfor %}
                         </div>
                         <span class="form__ingredient-link" id="addIng">Добавить ингредиент</span>
-                        <span class="form__error">
-                        {% if error %}
-                            <div class="non-field-errors">
-                                <p class="form-error">{{ error|escape }}</p>
-                            </div>
-                        {% endif %}
-                    </span>
+                        <span class="form-error">{{ form.non_field_errors }}</span>
                     </div>
                 </div>
                 <div class="form__group">
@@ -87,11 +81,11 @@
                 <div class="form__group">
                     <span class="form__label">Загрузить фото</span>
                     <div class="form__field-group">
-                        <label for="{{ form.image.id_for_label }}" class="form__file-button">Выбрать файл</label>
-                        <div class="form__fileitem">{{ recipe.image.name }}</div>
-                        <div class="form__hidden">{{ form.image|addclass:"form__file" }}</div>
-                        <div class="form__filename"></div>
-                        <span class="form__error">{{ form.image.errors }}</span>
+                        <div class="form__field-group">
+                            <label for="{{ form.image.id_for_label }}" class="form__file-button">Выбрать файл</label>
+                            <input type="file" name="{{ form.image.name }}" id="{{ form.image.id_for_label }}" class="form__file">
+                            <span class="form__error">{{ form.image.errors }}</span>
+                        </div>
                     </div>
                 </div>
                 <div class="form__footer">

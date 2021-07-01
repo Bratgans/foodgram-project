@@ -2,7 +2,7 @@
 {% csrf_token %}
 <div class="card-user" data-author="{{ follow.author_id }}">
     <div class="card-user__header">
-        <h2 class="card-user__title"><a href="{% url 'profile' follow.author %}" style="color: black">{{ follow.author.get_full_name }}</a></h2>
+        <h2 class="card-user__title"><a href="{% url 'profile' follow.author %}" style="color: black; text-decoration: none">{{ follow.author.get_full_name }}</a></h2>
     </div>
     <div class="card-user__body">
         <ul class="card-user__items">

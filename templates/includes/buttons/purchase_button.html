@@ -1,8 +1,8 @@
 {% load templates_filters %}
 {% if user.is_authenticated %}
     {% if recipe|in_purchases:user %}
-        <button class="button button_style_blue-outline" name="purchases"><span class="icon-check button-icon"></span> Рецепт добавлен</button>
+        {% if recipe_view %}<li class="single-card__item">{% endif %}<button class="button button_style_{% if index %}light-{% endif %}blue-outline" name="purchases"><span class="icon-check button-icon"></span> Рецепт добавлен</button>
     {% else %}
-        <button class="button button_style_blue" name="purchases" data-out><span class="icon-plus button-icon"></span> Добавить в покупки</button>
+        {% if recipe_view %}<li class="single-card__item">{% endif %}<button class="button button_style_{% if index %}light-{% endif %}blue" name="purchases" data-out><span class="icon-plus button-icon"></span> Добавить в покупки</button>
     {% endif%}
 {% endif %}
