@@ -123,8 +123,6 @@ def recipe_edit(request, recipe_id):
         Редактирование рецепта
     """
     recipe = get_object_or_404(Recipe, id=recipe_id)
-    if request.user != recipe.author:
-        return redirect('index')
     form = RecipeForm(request.POST or None,
                       files=request.FILES or None, instance=recipe)
     tags = recipe.tags.all()
